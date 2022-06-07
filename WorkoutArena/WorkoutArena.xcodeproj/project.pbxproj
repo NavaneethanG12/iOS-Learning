@@ -35,6 +35,7 @@
 		C4B8A0F62845FEA5005A1382 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A0F52845FEA5005A1382 /* Colors.swift */; };
 		C4B8A0FC28462F6E005A1382 /* InterStellarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A0FB28462F6E005A1382 /* InterStellarViewController.swift */; };
 		C4B8A0FE284630DA005A1382 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8A0FD284630DA005A1382 /* DataManager.swift */; };
+		C4EFDF00284F2BEC00593166 /* SDropDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4EFDEFF284F2BEC00593166 /* SDropDown.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		C4B8A0FA28460CED005A1382 /* WorkoutArena.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WorkoutArena.entitlements; sourceTree = "<group>"; };
 		C4B8A0FB28462F6E005A1382 /* InterStellarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterStellarViewController.swift; sourceTree = "<group>"; };
 		C4B8A0FD284630DA005A1382 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		C4EFDEFF284F2BEC00593166 /* SDropDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDropDown.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +203,7 @@
 		C4B8A0F72845FEAC005A1382 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				C4EFDEFF284F2BEC00593166 /* SDropDown.swift */,
 				C4B8A0FD284630DA005A1382 /* DataManager.swift */,
 				C4B8A0F52845FEA5005A1382 /* Colors.swift */,
 				C46E3388284A1D35009FCE2B /* ZButton.swift */,
@@ -412,6 +415,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4EFDF00284F2BEC00593166 /* SDropDown.swift in Sources */,
 				C46E3393284A2AAB009FCE2B /* Observable.swift in Sources */,
 				C46E3387284A1CB0009FCE2B /* DashBoardController.swift in Sources */,
 				C4B8A0E32845FDEF005A1382 /* ViewController.swift in Sources */,
