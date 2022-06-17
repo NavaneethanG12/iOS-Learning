@@ -1,0 +1,6 @@
+framework module Pods_PdfZipExporter {
+  umbrella header "Pods-PdfZipExporter-umbrella.h"
+
+  export *
+  module * { export * }
+}
