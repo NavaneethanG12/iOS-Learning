@@ -1,17 +1,30 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
 
+def common_pods
+  pod 'Alamofire'
+  pod 'SnapKit'
+  pod 'Kingfisher'
+  
+end
+
 target 'WorkoutArena' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
   # Pods for WorkoutArena
 
-  pod 'SnapKit'
-  pod 'Alamofire'
+  common_pods
+  pod 'SVProgressHUD'
 end
 
 target 'TriviaIntent' do
  use_frameworks!
- pod 'Alamofire'
+ common_pods
+end
+
+target 'WorkoutArenaTests' do
+  use_frameworks!
+  pod 'Quick'
+  pod 'Nimble'
 end

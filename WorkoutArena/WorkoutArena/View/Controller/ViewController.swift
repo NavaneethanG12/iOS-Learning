@@ -19,8 +19,8 @@ class ViewController: UIViewController, INUIAddVoiceShortcutViewControllerDelega
     let mainLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = Colors.navBarColor
-        label.text = "MAIN LABEl"
+        label.textColor = Colors.primaryTextColor
+        label.text = "MAIN LABEL"
         return label
     }()
     
@@ -49,7 +49,7 @@ class ViewController: UIViewController, INUIAddVoiceShortcutViewControllerDelega
         
         
         self.title = "HOME"
-        view.backgroundColor = Colors.navTintColor
+        view.backgroundColor = Colors.bgWhiteColor
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(pushVC))
         
@@ -58,8 +58,84 @@ class ViewController: UIViewController, INUIAddVoiceShortcutViewControllerDelega
         setIOS15Navigation()
         
         
+        
         setupView()
+//        loadImages()
+        print("Main area... function Called")
+        callAllAsync()
+
+        print("Main area... function Ended")
     }
+    
+    func loadImage(index: Int) async -> UIImage {
+        let imageURL = URL(string: "https://picsum.photos/200/300")!
+        let request = URLRequest(url: imageURL)
+        let (data, _) = try! await URLSession.shared.data(for: request, delegate: nil)
+        print("Finished loading image \(index)")
+        return UIImage(data: data)!
+    }
+
+    func loadImages(){
+        Task{
+            async let image1 = loadImage(index: 1)
+            async let image2 = loadImage(index: 2)
+            async let image3 = loadImage(index: 3)
+            let images = await [image1, image2, image3]
+        }
+    }
+
+    func fetchDataFromUrl() async -> Data?{
+        print("Data fetch Started")
+        let urlString = "https://api.thedogapi.com/v1/breeds"
+        do {
+            let (data, _) = try await URLSession.shared.data(from: (URL(string: urlString))!)
+            print("Data fetch Ended")
+            return data
+        }catch{
+            print("network fetch failed due to \(error)")
+            return nil
+        }
+    }
+
+    func doMathOperation() async -> Int{
+        print("Math operation Started")
+        var count: Int = 1
+        for i in Range(0...1000000){
+            count += i
+        }
+        print("Math operation Ended")
+        return count
+    }
+
+
+    func myAsyncFunction() async -> (data: Data?, math: Int){
+        
+        print("Data fetch Started in \(Thread.current)")
+        async let data =  fetchDataFromUrl()
+        print("Data fetch Ended in \(Thread.current)")
+        
+        print("Math Operation Started in \(Thread.current)")
+        async let calculatedValue = doMathOperation()
+        print("Math Operation Ended in \(Thread.current)")
+        
+        
+        let tuple = await (data, calculatedValue)
+        print("Tuple is Ready for returning")
+        return tuple
+        
+    }
+
+    func callAllAsync(){
+        Task.detached(priority: .background){
+            print("myAsync Function Call Started in \(Thread.current)")
+            let myTuple = await self.myAsyncFunction()
+            print("myAsync Function Call Ended in \(Thread.current)")
+            print(myTuple.data!,myTuple.math)
+        }
+    }
+
+    
+   
     
     private func setupView(){
         
@@ -87,7 +163,7 @@ class ViewController: UIViewController, INUIAddVoiceShortcutViewControllerDelega
         let loginBtn = ZButton(title: "Login", titleColor: .white, bgColor: Colors.btnColor, cornerRadius: 26, target: self, action: #selector(loginBtnTapped))
         view.addSubview(loginBtn)
         loginBtn.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-50)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50)
             make.centerX.equalToSuperview()
             make.width.equalTo(200)
             make.height.equalTo(52)

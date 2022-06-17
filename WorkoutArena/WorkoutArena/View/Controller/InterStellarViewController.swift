@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import SnapKit
-
+import SVProgressHUD
 
 class InterStellarViewController: UIViewController{
     
@@ -60,7 +60,7 @@ class InterStellarViewController: UIViewController{
     }
     
     private func setupView(){
-        
+        setIOS15Navigation()
         view.addSubview(stellarImage)
         
         stellarImage.snp.makeConstraints { make in
@@ -93,9 +93,11 @@ class InterStellarViewController: UIViewController{
     }
     
     func startDownloadImagesWithDataTask() {
+        SVProgressHUD.show(withStatus: "Loading..")
         for index in 0..<imageURLs.count {
             dataManager.fetchImageWithDataTask(with: imageURLs[index], index: index) {[weak self] image, index in
                 DispatchQueue.main.async {
+                    SVProgressHUD.dismiss()
                     self?.stellarImage.image = image
                     self?.descriptionView.text = (self?.descriptionView.text)! + "\n" + "Downloaded image\(index)"
                 }
@@ -122,12 +124,16 @@ class InterStellarViewController: UIViewController{
         }
     }
     
+    deinit{
+        SVProgressHUD.dismiss()
+    }
+    
     @objc func startDownload(){
         startDownloadImagesWithDataTask()
 //        startDownloadImagesWithGCD()
     }
     
-    func isCodeOnMainThread(named codeDescription:String) -> Bool {
+    func isCodeOnMainThread(named codeDescription: String) -> Bool {
             if Thread.isMainThread {
                 print("\(codeDescription) ON MAIN THREAD")
                 return true

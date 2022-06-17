@@ -6,15 +6,41 @@
 //
 
 import UIKit
+import Intents
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        
+        let vc = MainViewController()
+        window?.makeKeyAndVisible()
+        window?.rootViewController = vc
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(logoutUser), name: .logoutSuccess, object: nil)
+        
+        requestSiriAuthorization()
+        
         return true
+    }
+    
+    @objc func logoutUser(){
+        window?.rootViewController = MainViewController()
+    }
+    
+    private func requestSiriAuthorization(){
+        INPreferences.requestSiriAuthorization { status in
+          if status == .authorized {
+            print("Hey, Siri!")
+          } else {
+            print("Nay, Siri!")
+          }
+        }
     }
 
     // MARK: UISceneSession Lifecycle

@@ -26,6 +26,7 @@ class TriviaController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setIOS15Navigation()
         view.backgroundColor = Colors.navTintColor
         
         view.addSubview(getButton)

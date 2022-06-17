@@ -20,12 +20,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: scene)
         
-        let vc = ViewController()
-        let nav = UINavigationController(rootViewController: vc)
+        let vc = MainViewController()
         window?.makeKeyAndVisible()
-        window?.rootViewController = nav
+        window?.rootViewController = vc
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(logoutUser), name: .logoutSuccess, object: nil)
         
         requestSiriAuthorization()
+    }
+    
+    @objc func logoutUser(){
+        window?.rootViewController = MainViewController()
     }
     
     private func requestSiriAuthorization(){
@@ -37,6 +42,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
           }
         }
     }
+    
+    
+    
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

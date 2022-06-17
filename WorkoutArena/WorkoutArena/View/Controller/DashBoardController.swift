@@ -21,6 +21,7 @@ class DashBoardController: UIViewController, SDropDownDelegate {
         self.title = "Welcome"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Purchase", style: .plain, target: self, action: #selector(pushPurchaseController))
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutUser))
         
         setupView()
     }
@@ -39,7 +40,7 @@ class DashBoardController: UIViewController, SDropDownDelegate {
             make.width.equalTo(200)
             make.height.equalTo(50)
         }
-        
+        setIOS15Navigation()
     }
     
     func dropDown(didSelectAt index: Int, dropDown: SDropDown) {
@@ -54,5 +55,9 @@ class DashBoardController: UIViewController, SDropDownDelegate {
         let vc = PurchaseDetailController()
         
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func logoutUser(){
+        NotificationCenter.default.post(name: .logoutSuccess, object: nil)
     }
 }

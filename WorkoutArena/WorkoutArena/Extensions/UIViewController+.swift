@@ -30,4 +30,22 @@ extension UIViewController{
 //        navigationController?.navigationBar.isTranslucent = true
     }
     
+    
+    
+}
+
+extension UITabBarController{
+    func setIOS15TabBar(){
+        if #available(iOS 15, *){
+            let app = UITabBarAppearance()
+            app.backgroundColor = Colors.navBarColor
+            self.tabBar.barTintColor = Colors.navTintColor
+            self.tabBar.standardAppearance = app
+            self.tabBar.scrollEdgeAppearance = app
+        }else{
+            tabBar.backgroundColor = Colors.navBarColor
+            tabBar.barTintColor = Colors.navTintColor
+           
+        }
+    }
 }
