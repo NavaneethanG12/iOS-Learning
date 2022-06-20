@@ -14,6 +14,14 @@
 		C45F648C285C99D400D32A37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C45F648A285C99D400D32A37 /* Main.storyboard */; };
 		C45F648E285C99D600D32A37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C45F648D285C99D600D32A37 /* Assets.xcassets */; };
 		C45F6491285C99D600D32A37 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C45F648F285C99D600D32A37 /* LaunchScreen.storyboard */; };
+		C45F6499285C9CD800D32A37 /* ZButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45F6498285C9CD800D32A37 /* ZButton.swift */; };
+		C45F649B285C9FE000D32A37 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45F649A285C9FE000D32A37 /* Observable.swift */; };
+		C45F649D285CA1A200D32A37 /* PDFDocument+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45F649C285CA1A200D32A37 /* PDFDocument+.swift */; };
+		C45F649F285CA41500D32A37 /* PdfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45F649E285CA41500D32A37 /* PdfViewController.swift */; };
+		C45F64A1285CB5A400D32A37 /* ZipUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45F64A0285CB5A400D32A37 /* ZipUtilities.swift */; };
+		C4AB531B285DA7D90026FC5E /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB531A285DA7D90026FC5E /* FileManager+.swift */; };
+		C4AB531D286040800026FC5E /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB531C286040800026FC5E /* Alert.swift */; };
+		C4AB531F28604DC50026FC5E /* PdfExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB531E28604DC50026FC5E /* PdfExporter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +35,14 @@
 		C45F648D285C99D600D32A37 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C45F6490285C99D600D32A37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C45F6492285C99D600D32A37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C45F6498285C9CD800D32A37 /* ZButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZButton.swift; sourceTree = "<group>"; };
+		C45F649A285C9FE000D32A37 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		C45F649C285CA1A200D32A37 /* PDFDocument+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PDFDocument+.swift"; sourceTree = "<group>"; };
+		C45F649E285CA41500D32A37 /* PdfViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfViewController.swift; sourceTree = "<group>"; };
+		C45F64A0285CB5A400D32A37 /* ZipUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZipUtilities.swift; sourceTree = "<group>"; };
+		C4AB531A285DA7D90026FC5E /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
+		C4AB531C286040800026FC5E /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		C4AB531E28604DC50026FC5E /* PdfExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExporter.swift; sourceTree = "<group>"; };
 		EF90B697371F378503D31B9E /* Pods-PdfZipExporter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PdfZipExporter.debug.xcconfig"; path = "Target Support Files/Pods-PdfZipExporter/Pods-PdfZipExporter.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,7 +64,6 @@
 				EF90B697371F378503D31B9E /* Pods-PdfZipExporter.debug.xcconfig */,
 				B4E43202D32E660F55EB1253 /* Pods-PdfZipExporter.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -82,12 +97,20 @@
 			isa = PBXGroup;
 			children = (
 				C45F6484285C99D400D32A37 /* AppDelegate.swift */,
+				C45F649A285C9FE000D32A37 /* Observable.swift */,
 				C45F6486285C99D400D32A37 /* SceneDelegate.swift */,
+				C45F649E285CA41500D32A37 /* PdfViewController.swift */,
 				C45F6488285C99D400D32A37 /* ViewController.swift */,
 				C45F648A285C99D400D32A37 /* Main.storyboard */,
 				C45F648D285C99D600D32A37 /* Assets.xcassets */,
 				C45F648F285C99D600D32A37 /* LaunchScreen.storyboard */,
 				C45F6492285C99D600D32A37 /* Info.plist */,
+				C45F6498285C9CD800D32A37 /* ZButton.swift */,
+				C45F649C285CA1A200D32A37 /* PDFDocument+.swift */,
+				C4AB531A285DA7D90026FC5E /* FileManager+.swift */,
+				C45F64A0285CB5A400D32A37 /* ZipUtilities.swift */,
+				C4AB531C286040800026FC5E /* Alert.swift */,
+				C4AB531E28604DC50026FC5E /* PdfExporter.swift */,
 			);
 			path = PdfZipExporter;
 			sourceTree = "<group>";
@@ -207,9 +230,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4AB531B285DA7D90026FC5E /* FileManager+.swift in Sources */,
+				C45F649F285CA41500D32A37 /* PdfViewController.swift in Sources */,
 				C45F6489285C99D400D32A37 /* ViewController.swift in Sources */,
+				C45F649B285C9FE000D32A37 /* Observable.swift in Sources */,
 				C45F6485285C99D400D32A37 /* AppDelegate.swift in Sources */,
+				C4AB531F28604DC50026FC5E /* PdfExporter.swift in Sources */,
+				C45F64A1285CB5A400D32A37 /* ZipUtilities.swift in Sources */,
+				C45F6499285C9CD800D32A37 /* ZButton.swift in Sources */,
 				C45F6487285C99D400D32A37 /* SceneDelegate.swift in Sources */,
+				C4AB531D286040800026FC5E /* Alert.swift in Sources */,
+				C45F649D285CA1A200D32A37 /* PDFDocument+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
