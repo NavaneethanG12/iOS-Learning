@@ -39,8 +39,6 @@ class ViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Remove All pdf", style: .plain, target: self, action: #selector(removeAllPdf))
         
-        pdfExporter.createEncryptedDirectory()
-        pdfExporter.createMergedDocumentDirectory()
         setupView()
     }
 
@@ -80,6 +78,17 @@ class ViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-60)
         }
         
+        let zipPdf = ZButton(title: "Zip all Pdfs", titleColor: .white, bgColor: .tintColor, cornerRadius: 26, target: self, action: #selector(zipAllPdfs))
+        
+        view.addSubview(zipPdf)
+        
+        zipPdf.snp.makeConstraints { make in
+            make.width.equalTo(175)
+            make.height.equalTo(52)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(viewPdf.snp.top).offset(-25)
+        }
+        
         pdfExporter.documents.bind {[weak self] value in
 //            if value.count == 0{
 //                self?.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -95,7 +104,8 @@ class ViewController: UIViewController {
         
     }
     
-    @objc func showPasswordAlert(){
+    @objc func zipAllPdfs(){
+        
         let alert = UIAlertController(title: "Set Your Password", message: "This is the password used for encrypting your pdf", preferredStyle: .alert)
         alert.addTextField { passField in
             passField.placeholder = "Enter your PassWord"
@@ -109,12 +119,47 @@ class ViewController: UIViewController {
                 return
             }
             do{
-                try _self.pdfExporter.encryptAvailablePdfs(encryptionKey: encryptionKey)
+                let zippedPath = try _self.pdfExporter.zipAvailablePdfs(encryptionKey: encryptionKey)
+                
+                print("Zipped file path ---- \(zippedPath)")
             }catch{
                 print(error)
                 if let error = error as? PdfExporterErrors{
                     if error == .fileAlreadyExists{
                         MyAlert.shared.showAlert(inView: _self, alert: .fileExists("File Already Exists"))
+                    }else if error == .noAvailablePdfs{
+                        MyAlert.shared.showAlert(inView: _self, alert: .noAvailablePdfs("No available pdf to encrypt"))
+                    }
+                }
+            }
+        }))
+        present(alert, animated: true)
+        
+    }
+    
+    @objc func showPasswordAlert(){
+        let alert = UIAlertController(title: "Set Your Password", message: "This is the password used for encrypting your zip file", preferredStyle: .alert)
+        alert.addTextField { passField in
+            passField.placeholder = "Enter your PassWord"
+        }
+        
+        alert.addAction(UIAlertAction(title: "SET", style: .default, handler: {[weak self] alerAction in
+            let encryptionKey =  alert.textFields?.first?.text
+            
+            guard let _self = self else {
+                print("\(String(describing: self)) was destroyed")
+                return
+            }
+            do{
+                let encryptPath = try _self.pdfExporter.encryptAvailablePdfs(encryptionKey: encryptionKey)
+                print("Encrypted file path ---- \(encryptPath)")
+            }catch{
+                print(error)
+                if let error = error as? PdfExporterErrors{
+                    if error == .fileAlreadyExists{
+                        MyAlert.shared.showAlert(inView: _self, alert: .fileExists("File Already Exists"))
+                    }else if error == .noAvailablePdfs{
+                        MyAlert.shared.showAlert(inView: _self, alert: .noAvailablePdfs("No available pdf to encrypt"))
                     }
                 }
             }

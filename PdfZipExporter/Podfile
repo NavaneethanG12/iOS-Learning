@@ -6,5 +6,6 @@ target 'PdfZipExporter' do
   use_frameworks!
 
   # Pods for PdfZipExporter
+  pod 'SSZipArchive'
   pod 'SnapKit'
 end

@@ -33,8 +33,8 @@ class MyAlert: NSObject {
             sharedAlert = UIAlertController(title: message, message: "", preferredStyle: .alert)
         case .noAvailablePdfs(let message):
             sharedAlert = UIAlertController(title: message, message: "", preferredStyle: .alert)
-        default:
-            sharedAlert = UIAlertController(title: "Something went wrong!", message: "", preferredStyle: .alert)
+//        default:
+//            sharedAlert = UIAlertController(title: "Something went wrong!", message: "", preferredStyle: .alert)
         }
         sharedAlert.addAction(UIAlertAction(title: "OK", style: .default))
         inView.present(sharedAlert, animated: true)

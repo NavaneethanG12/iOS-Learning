@@ -30,6 +30,23 @@ extension FileManager{
         }
     }
     
+    func createZipFilesDirectory(){
+        let dirPath = getDocumentDirectory().appendingPathComponent("ZipFiles").path
+        
+        do {
+            try FileManager.default.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
+            print("ZipFiles Directory created Successfully")
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getZipFilesDirectory() -> URL{
+        let dirPath = getDocumentDirectory().appendingPathComponent("ZipFiles")
+        
+        return dirPath
+    }
+    
     func createEncryptedDirectory(){
         let dirPath = getDocumentDirectory().appendingPathComponent("EncryptedDocuments").path
         
