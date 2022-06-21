@@ -9,36 +9,23 @@ import Foundation
 import PDFKit
 import SSZipArchive
 
-enum PdfExporterErrors: String, Error{
-    case noAvailablePdfs
-    case pdfEncryptionFailed
-    case fileAlreadyExists
-    case mergeError = "Merging the files failed"
-    case zipError = "Zipping failed"
-}
-
-protocol PdfExporterDelegate{
-    func pdfExporter(didFinishwitherror error: Alert, pdfExporter: PdfExporter)
-}
-
 class PdfExporter: NSObject{
     
     var fileManager = FileManager.default
     
-    var delegate: PdfExporterDelegate?
-    
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
+        formatter.dateFormat = "ddMMYYHHmmss"
+//        formatter.dateStyle = .medium
+//        formatter.timeStyle = .medium
         return formatter
     }()
     
-    var documents: Observable<[PDFDocument]> = Observable.init(value: [])
+    var documentUrls: Observable<[URL]> = Observable.init(value: [])
     
     private(set) var encryptedFilesDirectory: URL{
         get{
-        return fileManager.getEncryptedDirectory()
+            return fileManager.getEncryptedDirectory()
         }
         set{
             // setter is private
@@ -47,7 +34,7 @@ class PdfExporter: NSObject{
     
     private(set) var zipFilesDirectory: URL{
         get{
-        return fileManager.getZipFilesDirectory()
+            return fileManager.getZipFilesDirectory()
         }
         set{
             // setter is private
@@ -56,64 +43,124 @@ class PdfExporter: NSObject{
     
     private(set) var mergedFilesDirectory: URL{
         get{
-        return fileManager.getMergedDocumentDirectory()
+            return fileManager.getMergedDocumentDirectory()
         }
         set{
             // setter is private
         }
     }
     
+    var isDir:ObjCBool = true
+    
     override init() {
         super.init()
         
-        createEncryptedDirectory()
-        createMergedDocumentDirectory()
-        createZipFilesDirectory()
     }
     
-    private func createEncryptedDirectory(){
-        fileManager.createEncryptedDirectory()
+    private func checkForEncryptedDirectory(){
+        if fileManager.fileExists(atPath: encryptedFilesDirectory.path, isDirectory: &isDir){
+            print("Encrypted Files Directory Alredy exists")
+        }else{
+            fileManager.createEncryptedDirectory()
+        }
     }
     
-    private func createMergedDocumentDirectory(){
-        fileManager.createMergedDocumentDirectory()
+    private func checkForMergedDocumentDirectory(){
+        if fileManager.fileExists(atPath: mergedFilesDirectory.path, isDirectory: &isDir){
+            print("Merged Files Directory Alredy exists")
+        }else{
+            fileManager.createMergedDocumentDirectory()
+        }
     }
     
-    private func createZipFilesDirectory(){
-        fileManager.createZipFilesDirectory()
+    private func checkForZipFilesDirectory(){
+        if fileManager.fileExists(atPath: zipFilesDirectory.path, isDirectory: &isDir){
+            print("Zip Files Directory Alredy exists")
+        }else{
+            fileManager.createZipFilesDirectory()
+        }
     }
-    
-    func fileExists(atPath: String) -> Bool{
+  
+    private func fileExists(atPath: String) -> Bool{
         return fileManager.fileExists(atPath: atPath)
     }
-
     
-    func mergePdf(documents: [PDFDocument]) -> PDFDocument{
-        let pdfDocument = PDFDocument()
+    
+    func mergePdf(urls: [URL]) throws -> URL{
+        checkForMergedDocumentDirectory()
         
-        for document in documents{
+        let pdfDocument = PDFDocument()
+        for url in urls{
+            guard let document = PDFDocument(url: url) else {
+                throw PdfExporterErrors.urlError
+            }
             pdfDocument.addPages(from: document)
         }
+        let currentDate = Date()
         
-        return pdfDocument
+        let createdTime = dateFormatter.string(from: currentDate)
+        
+        let fileName = "Merged \(createdTime).pdf"
+
+    let filePath = mergedFilesDirectory.appendingPathComponent(fileName)
+    
+    if fileExists(atPath: filePath.path){
+        throw PdfExporterErrors.fileAlreadyExists
+    }
+        let success = pdfDocument.write(to: filePath)
+        if success{
+            return filePath
+        }else{
+            throw PdfExporterErrors.mergeError
+        }
     }
     
-    func mergeAvailablePdfs() throws -> PDFDocument{
+    func mergeAvailablePdfs(fileName: String? = nil) throws -> URL{
+        checkForMergedDocumentDirectory()
         
-        guard documents.value.count > 0 else {
+        guard documentUrls.value.count > 0 else {
             throw PdfExporterErrors.noAvailablePdfs
         }
-        
         let pdfDocument = PDFDocument()
         
-        for document in documents.value{
+        for url in documentUrls.value{
+            guard let document = PDFDocument(url: url) else {
+                throw PdfExporterErrors.urlError
+            }
             pdfDocument.addPages(from: document)
         }
         
-        return pdfDocument
+        let mergeFileName: String!
+        
+        if fileName != nil {
+            mergeFileName = fileName! + ".pdf"
+            
+        }else{
+            let currentDate = Date()
+            
+            let createdTime = dateFormatter.string(from: currentDate)
+            
+            mergeFileName = "Merged \(createdTime).pdf"
+        }
+        
+        let filePath = mergedFilesDirectory.appendingPathComponent(mergeFileName)
+        
+        if fileExists(atPath: filePath.path){
+            throw PdfExporterErrors.fileAlreadyExists
+        }
+
+        let success = pdfDocument.write(to: filePath)
+        if success{
+            return filePath
+        }else{
+            throw PdfExporterErrors.mergeError
+        }
+ 
     }
     
-    func encryptPdf(for document: PDFDocument, encryptionKey key: String?, encryptFileName: String? = nil) throws {
+ /*
+    
+    func encryptPdf(for documentUrl: URL, encryptionKey key: String?, encryptFileName: String? = nil) throws {
         
         let fileName: String!
         
@@ -128,11 +175,7 @@ class PdfExporter: NSObject{
             fileName = "Encrypted \(createdTime).pdf"
         }
         
-        
-        
         let filePath = encryptedFilesDirectory.appendingPathComponent(fileName)
-
-//        print(filePath)
         
         if fileExists(atPath: filePath.path){
             throw PdfExporterErrors.fileAlreadyExists
@@ -144,14 +187,44 @@ class PdfExporter: NSObject{
         }else{
             throw PdfExporterErrors.pdfEncryptionFailed
         }
+    }
+    
+    */
+    
+    func encryptPdf(for document: PDFDocument, encryptionKey key: String?, encryptFileName: String? = nil) throws {
+        checkForEncryptedDirectory()
         
+        let fileName: String!
         
+        if encryptFileName != nil {
+            fileName = encryptFileName! + ".pdf"
+            
+        }else{
+            let currentDate = Date()
+            
+            let createdTime = dateFormatter.string(from: currentDate)
+            
+            fileName = "Encrypted \(createdTime).pdf"
+        }
         
+        let filePath = encryptedFilesDirectory.appendingPathComponent(fileName)
+        
+        if fileExists(atPath: filePath.path){
+            throw PdfExporterErrors.fileAlreadyExists
+        }
+        
+        let success = document.write(to: filePath, withOptions: [.userPasswordOption: key!, .ownerPasswordOption: key!])
+        if success{
+            print("encryption success")
+        }else{
+            throw PdfExporterErrors.pdfEncryptionFailed
+        }
     }
     
     func encryptAvailablePdfs(encryptionKey key: String?, encryptFileName: String? = nil) throws -> URL {
+        checkForEncryptedDirectory()
         
-        guard documents.value.count > 0 else {
+        guard documentUrls.value.count > 0 else {
             throw PdfExporterErrors.noAvailablePdfs
         }
         
@@ -162,28 +235,27 @@ class PdfExporter: NSObject{
             
         }else{
             let currentDate = Date()
-        
+            
             let createdTime = dateFormatter.string(from: currentDate)
             
             fileName = "Encrypted \(createdTime).pdf"
         }
         
-        
-        
         let filePath = encryptedFilesDirectory.appendingPathComponent(fileName)
-
-//        print(filePath)
         
         if fileExists(atPath: filePath.path){
             throw PdfExporterErrors.fileAlreadyExists
-//            delegate?.pdfExporter(didFinishwitherror: .fileExists("File Already exists"), pdfExporter: self)
-//            return
+            
         }
         do{
-            let mergedDocument = try mergeAvailablePdfs()
+            let mergedDocumentUrl = try mergeAvailablePdfs(fileName: "temp")
+            guard let mergedDocument = PDFDocument(url: mergedDocumentUrl) else {
+                throw PdfExporterErrors.urlError
+            }
             let success = mergedDocument.write(to: filePath, withOptions: [.userPasswordOption: key!, .ownerPasswordOption: key!])
             if success{
                 print("encryption success")
+                try fileManager.removeItem(atPath: mergedDocumentUrl.path)
                 return filePath
             }else{
                 throw PdfExporterErrors.pdfEncryptionFailed
@@ -196,56 +268,58 @@ class PdfExporter: NSObject{
     }
     
     func zipAvailablePdfs(encryptionKey key: String?, zipFileName: String? = nil) throws -> URL{
+        checkForZipFilesDirectory()
         
-        guard documents.value.count > 0 else {
+        guard documentUrls.value.count > 0 else {
             throw PdfExporterErrors.noAvailablePdfs
         }
         let currentDate = Date()
-    
+        
         let createdTime = dateFormatter.string(from: currentDate)
         
         let fileName: String!
         
         if zipFileName != nil {
             fileName = zipFileName! + ".zip"
-            
         }else{
-            
-            fileName = "Merged \(createdTime).zip"
+            fileName = "Zipped \(createdTime).zip"
         }
         
         let zipPath = zipFilesDirectory.appendingPathComponent(fileName)
-
-//        print(zipPath)
         
         if fileExists(atPath: zipPath.path){
             throw PdfExporterErrors.fileAlreadyExists
-
         }
         
-        let mergedFilePath = mergedFilesDirectory.appendingPathComponent("Merged \(createdTime).pdf")
-        
         do{
-            let mergedDocument = try mergeAvailablePdfs()
-            let success = mergedDocument.write(to: mergedFilePath)
-            if success{
-                print("Merged Pdf Successfully created")
-                let zipSuccess = SSZipArchive.createZipFile(atPath: zipPath.path, withFilesAtPaths: [mergedFilePath.path], withPassword: key)
-    
-                if zipSuccess{
-                    print("Zipping success")
-                    try fileManager.removeItem(atPath: mergedFilePath.path)
-                    return zipPath
-                }else{
-                    throw PdfExporterErrors.zipError
-                }
-                
+            let zipSuccess = SSZipArchive.createZipFile(atPath: zipPath.path, withFilesAtPaths: documentUrls.value.map({ url in
+                url.path
+            }), withPassword: key != nil ? key : nil)
+            
+            if zipSuccess{
+                print("Zipping success")
+                return zipPath
             }else{
-                throw PdfExporterErrors.mergeError
+                throw PdfExporterErrors.zipError
             }
         }catch{
-            
             print(error)
+            throw error
+        }
+    }
+    
+    func clearAllFileDirectories()throws {
+        do{
+            if fileManager.fileExists(atPath: mergedFilesDirectory.path, isDirectory: &isDir){
+                try fileManager.removeItem(atPath: mergedFilesDirectory.path)
+            }
+            if fileManager.fileExists(atPath: encryptedFilesDirectory.path, isDirectory: &isDir){
+                try fileManager.removeItem(atPath: encryptedFilesDirectory.path)
+            }
+            if fileManager.fileExists(atPath: zipFilesDirectory.path, isDirectory: &isDir){
+                try fileManager.removeItem(atPath: zipFilesDirectory.path)
+            }
+        }catch{
             throw error
         }
     }

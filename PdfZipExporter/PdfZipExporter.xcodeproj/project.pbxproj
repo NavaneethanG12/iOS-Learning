@@ -22,6 +22,7 @@
 		C4AB531B285DA7D90026FC5E /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB531A285DA7D90026FC5E /* FileManager+.swift */; };
 		C4AB531D286040800026FC5E /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB531C286040800026FC5E /* Alert.swift */; };
 		C4AB531F28604DC50026FC5E /* PdfExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB531E28604DC50026FC5E /* PdfExporter.swift */; };
+		C4AB532128609D080026FC5E /* PdfExporterErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB532028609D080026FC5E /* PdfExporterErrors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		C4AB531A285DA7D90026FC5E /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		C4AB531C286040800026FC5E /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		C4AB531E28604DC50026FC5E /* PdfExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExporter.swift; sourceTree = "<group>"; };
+		C4AB532028609D080026FC5E /* PdfExporterErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExporterErrors.swift; sourceTree = "<group>"; };
 		EF90B697371F378503D31B9E /* Pods-PdfZipExporter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PdfZipExporter.debug.xcconfig"; path = "Target Support Files/Pods-PdfZipExporter/Pods-PdfZipExporter.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +109,7 @@
 				C45F6492285C99D600D32A37 /* Info.plist */,
 				C45F6498285C9CD800D32A37 /* ZButton.swift */,
 				C45F649C285CA1A200D32A37 /* PDFDocument+.swift */,
+				C4AB532028609D080026FC5E /* PdfExporterErrors.swift */,
 				C4AB531A285DA7D90026FC5E /* FileManager+.swift */,
 				C45F64A0285CB5A400D32A37 /* ZipUtilities.swift */,
 				C4AB531C286040800026FC5E /* Alert.swift */,
@@ -232,6 +235,7 @@
 			files = (
 				C4AB531B285DA7D90026FC5E /* FileManager+.swift in Sources */,
 				C45F649F285CA41500D32A37 /* PdfViewController.swift in Sources */,
+				C4AB532128609D080026FC5E /* PdfExporterErrors.swift in Sources */,
 				C45F6489285C99D400D32A37 /* ViewController.swift in Sources */,
 				C45F649B285C9FE000D32A37 /* Observable.swift in Sources */,
 				C45F6485285C99D400D32A37 /* AppDelegate.swift in Sources */,

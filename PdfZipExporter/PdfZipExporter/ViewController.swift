@@ -15,18 +15,14 @@ import PDFKit
 class ViewController: UIViewController {
     
     
-    var pdfCount: Observable<Int> = Observable.init(value: 0)
-    
-    var encryptionKey: String?
-    
-    var pdfDocuments: [PDFDocument] = []
-        
     var pdfExporter = PdfExporter()
     
     lazy var pdfCountLabel: UILabel = {
         let label = UILabel()
         return label
     }()
+    
+    var mergedFilePath: URL!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +39,7 @@ class ViewController: UIViewController {
     }
 
     @objc func removeAllPdf(){
-        pdfExporter.documents.value.removeAll()
+        pdfExporter.documentUrls.value.removeAll()
 //        pdfCount.value = pdfDocuments.count
     }
     
@@ -54,6 +50,18 @@ class ViewController: UIViewController {
         
         pdfCountLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.centerX.equalToSuperview()
+        }
+        
+        let clearBtn = UIButton()
+        clearBtn.setTitle("Clear All Directories", for: .normal)
+        clearBtn.setTitleColor(.red, for: .normal)
+        clearBtn.addTarget(self, action: #selector(clearAllFileDirectories), for: .touchUpInside)
+        
+        view.addSubview(clearBtn)
+        
+        clearBtn.snp.makeConstraints { make in
+            make.top.equalTo(pdfCountLabel.snp.bottom).offset(12)
             make.centerX.equalToSuperview()
         }
         
@@ -86,10 +94,21 @@ class ViewController: UIViewController {
             make.width.equalTo(175)
             make.height.equalTo(52)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(viewPdf.snp.top).offset(-25)
+            make.bottom.equalTo(viewPdf.snp.top).offset(-15)
         }
         
-        pdfExporter.documents.bind {[weak self] value in
+        let mergePdf = ZButton(title: "Merge all Pdfs", titleColor: .white, bgColor: .tintColor, cornerRadius: 26, target: self, action: #selector(mergeAllPdfs))
+        
+        view.addSubview(mergePdf)
+        
+        mergePdf.snp.makeConstraints { make in
+            make.width.equalTo(175)
+            make.height.equalTo(52)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(zipPdf.snp.top).offset(-15)
+        }
+        
+        pdfExporter.documentUrls.bind {[weak self] value in
 //            if value.count == 0{
 //                self?.navigationItem.rightBarButtonItem?.isEnabled = false
 //                viewPdf.isUserInteractionEnabled = false
@@ -102,6 +121,17 @@ class ViewController: UIViewController {
             self?.pdfCountLabel.text = "No of pdf Added : \(value.count)"
         }
         
+    }
+    
+    @objc func mergeAllPdfs(){
+        do{
+            let mergedPdfpath = try pdfExporter.mergeAvailablePdfs()
+            print("Merged File Path ---- \(mergedPdfpath)")
+            mergedFilePath = mergedPdfpath
+        }catch{
+            print(error.localizedDescription)
+        }
+  
     }
     
     @objc func zipAllPdfs(){
@@ -119,11 +149,11 @@ class ViewController: UIViewController {
                 return
             }
             do{
-                let zippedPath = try _self.pdfExporter.zipAvailablePdfs(encryptionKey: encryptionKey)
+                let zippedPath = try _self.pdfExporter.zipAvailablePdfs(encryptionKey: encryptionKey == "" ? nil : encryptionKey)
                 
                 print("Zipped file path ---- \(zippedPath)")
             }catch{
-                print(error)
+                print(error.localizedDescription)
                 if let error = error as? PdfExporterErrors{
                     if error == .fileAlreadyExists{
                         MyAlert.shared.showAlert(inView: _self, alert: .fileExists("File Already Exists"))
@@ -151,10 +181,10 @@ class ViewController: UIViewController {
                 return
             }
             do{
-                let encryptPath = try _self.pdfExporter.encryptAvailablePdfs(encryptionKey: encryptionKey)
+                let encryptPath = try _self.pdfExporter.encryptAvailablePdfs(encryptionKey: encryptionKey == "" ? nil : encryptionKey )
                 print("Encrypted file path ---- \(encryptPath)")
             }catch{
-                print(error)
+                print(error.localizedDescription)
                 if let error = error as? PdfExporterErrors{
                     if error == .fileAlreadyExists{
                         MyAlert.shared.showAlert(inView: _self, alert: .fileExists("File Already Exists"))
@@ -165,6 +195,10 @@ class ViewController: UIViewController {
             }
         }))
         present(alert, animated: true)
+    }
+    
+    @objc func clearAllFileDirectories(){
+        try? pdfExporter.clearAllFileDirectories()
     }
     
 
@@ -186,14 +220,10 @@ class ViewController: UIViewController {
     }
     
     @objc func shorMergedpdf(){
-        do{
-            let pdfDocument = try pdfExporter.mergeAvailablePdfs()
-            let pdfVC = PdfViewController(document: pdfDocument)
+            let pdfDocument = PDFDocument(url: mergedFilePath)
+            let pdfVC = PdfViewController(document: pdfDocument!)
             
             self.navigationController?.pushViewController(pdfVC, animated: true)
-        }catch{
-            print(error)
-        }
     }
 }
 
@@ -201,11 +231,9 @@ class ViewController: UIViewController {
 extension ViewController: UIDocumentPickerDelegate{
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        for url in urls {
-            if let document = PDFDocument(url: url){
-                pdfExporter.documents.value.append(document)
-            }
-        }
+        
+        pdfExporter.documentUrls.value = urls
+           
     }
     
 }

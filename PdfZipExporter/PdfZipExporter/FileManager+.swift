@@ -8,19 +8,19 @@
 import Foundation
 
 extension FileManager{
-    func getDocumentDirectory() -> URL{
-        return self.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    func getCacheDirectory() -> URL{
+        return self.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     }
     
     func getMergedDocumentDirectory() -> URL{
-        let dirPath = getDocumentDirectory().appendingPathComponent("MergedDocuments")
+        let dirPath = getCacheDirectory().appendingPathComponent("MergedDocuments")
         
         return dirPath
     }
     
     func createMergedDocumentDirectory(){
         
-        let dirPath = getDocumentDirectory().appendingPathComponent("MergedDocuments").path
+        let dirPath = getCacheDirectory().appendingPathComponent("MergedDocuments").path
         
         do {
             try FileManager.default.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
@@ -31,7 +31,8 @@ extension FileManager{
     }
     
     func createZipFilesDirectory(){
-        let dirPath = getDocumentDirectory().appendingPathComponent("ZipFiles").path
+        let dirPath = getCacheDirectory().appendingPathComponent("ZipFiles").path
+        
         
         do {
             try FileManager.default.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
@@ -42,13 +43,13 @@ extension FileManager{
     }
     
     func getZipFilesDirectory() -> URL{
-        let dirPath = getDocumentDirectory().appendingPathComponent("ZipFiles")
+        let dirPath = getCacheDirectory().appendingPathComponent("ZipFiles")
         
         return dirPath
     }
     
     func createEncryptedDirectory(){
-        let dirPath = getDocumentDirectory().appendingPathComponent("EncryptedDocuments").path
+        let dirPath = getCacheDirectory().appendingPathComponent("EncryptedDocuments").path
         
         do {
             try FileManager.default.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
@@ -59,7 +60,7 @@ extension FileManager{
     }
     
     func getEncryptedDirectory() -> URL{
-        let dirPath = getDocumentDirectory().appendingPathComponent("EncryptedDocuments")
+        let dirPath = getCacheDirectory().appendingPathComponent("EncryptedDocuments")
         
         return dirPath
     }
