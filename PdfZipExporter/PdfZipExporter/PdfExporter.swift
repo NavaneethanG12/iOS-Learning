@@ -133,21 +133,17 @@ class PdfExporter: NSObject{
         
         guard documents.value.count > 0 else {
             return
-            //            completion(nil,PdfExporterErrors.noAvailablePdfs)
         }
         
-        unlockAllAvailablePdf(index: 0) { [weak self] unlockedDocuments, success in
+        unlockAllAvailablePdf(index: 0) { [weak self] unlockedDocuments, failedIndeces, success in
             guard let _self = self else { return }
+            
             if success{
                 let pdfDocument = PDFDocument()
-                guard let unlockedDocuments = unlockedDocuments else { return }
+                guard let unlockedDocuments = unlockedDocuments else {
+                    return
+                }
                 for document in unlockedDocuments{
-                    
-                    //                        guard let document = zDocument.pdf
-                    //                        else {
-                    //                            return
-                    //                            //                        completion(nil,PdfExporterErrors.urlError)
-                    //                        }
                     pdfDocument.addPages(from: document)
                 }
                 let filePath = _self.getFilepath(outputFileName: fileName, fileType: .mergedPdf)
@@ -161,6 +157,15 @@ class PdfExporter: NSObject{
                 }else{
                     completion(nil,PdfExporterErrors.mergeError)
                 }
+            }else{
+                var failedDocuments = ""
+                for index in failedIndeces{
+                    failedDocuments += " --- \(_self.documents.value[index].fileName)"
+                }
+                DispatchQueue.main.async {
+                    _self.myAlert.showAlert(inView: _self.rootViewController!, alert: .defaultAlert("Password Mismatch for \(failedDocuments)"))
+                }
+                
             }
             
         }
@@ -220,31 +225,25 @@ class PdfExporter: NSObject{
         
         guard documents.value.count > 0 else {
             return
-            //            completion(nil,PdfExporterErrors.noAvailablePdfs)
         }
         
-        unlockAllAvailablePdf(index: 0) {[weak self] unlockedDocuments, success in
-            guard let _self = self else { return }
-            
-            if success{
-                let filePath = _self.getFilepath(outputFileName: encryptFileName, fileType: .encryptedPdf)
+                let filePath = getFilepath(outputFileName: encryptFileName, fileType: .encryptedPdf)
                 
-                if _self.fileExists(atPath: filePath.path){
+                if fileExists(atPath: filePath.path){
                     completion(nil,PdfExporterErrors.fileAlreadyExists)
                     
                 }
                 
-                _self.mergeAvailablePdfs(fileName: "temp"){ url, error in
+                mergeAvailablePdfs(fileName: "temp"){[weak self] url, error in
                     guard let mergedDocumentUrl = url else { return }
                     do{
                         guard let mergedDocument = PDFDocument(url: mergedDocumentUrl) else {
                             return
-                            //                        completion(nil,PdfExporterErrors.urlError)
                         }
                         let success = mergedDocument.write(to: filePath, withOptions: [.userPasswordOption: key!, .ownerPasswordOption: key!])
                         if success{
                             print("encryption success")
-                            try _self.fileManager.removeItem(atPath: mergedDocumentUrl.path)
+                            try self?.fileManager.removeItem(atPath: mergedDocumentUrl.path)
                             completion(filePath,nil)
                         }else{
                             completion(nil,PdfExporterErrors.pdfEncryptionFailed)
@@ -253,8 +252,7 @@ class PdfExporter: NSObject{
                         completion(nil,error)
                     }
                 }
-            }
-        }
+            
     }
     
     func zipAvailablePdfs(encryptionKey key: String?, zipFileName: String? = nil, completion: @escaping PdfExporterCompletionHandler){
@@ -262,10 +260,9 @@ class PdfExporter: NSObject{
         
         guard documents.value.count > 0 else {
             return
-            //            completion(nil,PdfExporterErrors.noAvailablePdfs)
         }
         
-        unlockAllAvailablePdf(index: 0) {[weak self] unlockedDocuments, success in
+        unlockAllAvailablePdf(index: 0) {[weak self] unlockedDocuments, failedIndeces, success in
             guard let _self = self else { return }
             if success{
                 guard let unlockedDocuments = unlockedDocuments else { return }
@@ -285,6 +282,8 @@ class PdfExporter: NSObject{
                 }else{
                     completion(nil,PdfExporterErrors.zipError)
                 }
+            }else{
+                _self.myAlert.showAlert(inView: _self.rootViewController!, alert: .passAlert("Password Mismatch"))
             }
         }
         
@@ -296,54 +295,46 @@ class PdfExporter: NSObject{
         
         guard documents.value.count > 0 else {
             return
-            //            completion(nil,PdfExporterErrors.noAvailablePdfs)
         }
         
-        unlockAllAvailablePdf(index: 0) {[weak self] unlockedDocuments, success in
-            guard let _self = self else { return }
-            if success{
-                let filePath = _self.getFilepath(outputFileName: outputFileName, fileType: .flattenedPdf)
-                if _self.fileExists(atPath: filePath.path){
-                    completion(nil,PdfExporterErrors.fileAlreadyExists)
-                    
+        let filePath = getFilepath(outputFileName: outputFileName, fileType: .flattenedPdf)
+        if fileExists(atPath: filePath.path){
+            completion(nil,PdfExporterErrors.fileAlreadyExists)
+        }
+        mergeAvailablePdfs(fileName: "temp"){[weak self] url, error in
+            guard let mergedDocumentUrl = url else { return }
+            do{
+                guard let unFlattenedDocument = PDFDocument(url: mergedDocumentUrl) else {
+                    return
                 }
-                _self.mergeAvailablePdfs(fileName: "temp"){ url, error in
-                    guard let mergedDocumentUrl = url else { return }
-                    do{
-                        guard let unFlattenedDocument = PDFDocument(url: mergedDocumentUrl) else {
-                            return
-                            //                            completion(nil,PdfExporterErrors.urlError)
-                        }
-                        let flattenedDocument = unFlattenedDocument.flattened(withDPI: 72.0)
-                        let success = flattenedDocument.write(to: filePath)
-                        if success{
-                            try _self.fileManager.removeItem(atPath: mergedDocumentUrl.path)
-                            completion(filePath,nil)
-                        }else{
-                            completion(nil,PdfExporterErrors.pdfEncryptionFailed)
-                        }
-                        
-                    }
-                    catch{
-                        completion(nil,error)
-                    }
+                let flattenedDocument = unFlattenedDocument.flattened(withDPI: 72.0)
+                let success = flattenedDocument.write(to: filePath)
+                if success{
+                    try self?.fileManager.removeItem(atPath: mergedDocumentUrl.path)
+                    completion(filePath,nil)
+                }else{
+                    completion(nil,PdfExporterErrors.pdfEncryptionFailed)
                 }
+                
             }
-            
+            catch{
+                completion(nil,error)
+            }
         }
     }
+
+
         
     func unlockAllAvailablePdf(index: Int,
-                               completion: @escaping (([PDFDocument]?,Bool)-> Void)){
+                               completion: @escaping (([PDFDocument]?,[Int],Bool)-> Void)){
         if index == documents.value.count{
-            completion([],true)
+            completion([],[],true)
         }else{
             if let document = documents.value[index].pdf{
                 if document.isLocked || document.isEncrypted{
-                    
                     let alert = UIAlertController(title: "\(documents.value[index].fileName) is encrypted enter password to unlock", message: "", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: { action in
-                        completion(nil,false)
+                        completion(nil,[],false)
                     }))
                     alert.addTextField()
                     alert.addAction(UIAlertAction(title: "Unlock", style: .default, handler: { action in
@@ -352,41 +343,78 @@ class PdfExporter: NSObject{
                         if success{
 
                             if index == self.documents.value.count-1{
-                                completion([document],true)
+                                completion([document],[],true)
                             }else{
-                                self.unlockAllAvailablePdf(index: index + 1) { documents, success in
+                                self.unlockAllAvailablePdf(index: index + 1) { documents, failedIndeces, success in
                                     if success{
                                         var a = documents
                                         a?.insert(document, at: 0)
-                                        completion(a,true)
+                                        completion(a,[],success)
+                                    }else{
+                                        completion(nil,failedIndeces,success)
                                     }
                                 }
                             }
                         }else{
                             if index == self.documents.value.count-1{
-                                completion(nil,false)
+                                completion(nil,[index],false)
+                            }else{
+                                self.unlockAllAvailablePdf(index: index + 1) { documents, failedIndeces, success in
+                                    if success{
+                                        completion(nil,[],success)
+                                    }else{
+                                        var i = failedIndeces
+                                        i.insert(index, at: 0)
+                                        completion(nil,i,false)
+                                    }
+                                }
                             }
                         }
                         
                     }))
                     self.rootViewController?.present(alert, animated: true)
                 }else{
-                    completion([documents.value[index].pdf!],true)
+                    completion([documents.value[index].pdf!],[],true)
                 }
             }
         }
     }
     
-    func presentAlertController(zDocument : ZDocument,completion : @escaping ((UIAlertAction) -> Void)){
-        let alert = UIAlertController(title: "\(zDocument.fileName) is encrypted enter password to unlock", message: "", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: { action in
-            //            completion(nil,false)
-        }))
-        alert.addTextField()
-        alert.addAction(UIAlertAction(title: "Unlock", style: .default, handler: { action in
-            completion(action)
-        }))
-        rootViewController?.present(alert, animated: true)
+    func presentAlertController(zDocument : ZDocument,index: Int,completion : @escaping (([PDFDocument]?,Bool)-> Void)){
+        if let document = zDocument.pdf{
+            let alert = UIAlertController(title: "\(zDocument.fileName) is encrypted enter password to unlock", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: { action in
+                completion(nil,false)
+            }))
+            alert.addTextField()
+            alert.addAction(UIAlertAction(title: "Unlock", style: .default, handler: { action in
+                let password = alert.textFields?.first?.text
+                let success = document.unlock(withPassword: password!)
+                if success{
+
+                    if index == self.documents.value.count-1{
+                        completion([document],true)
+                    }else{
+                        self.unlockAllAvailablePdf(index: index + 1) { documents, failedIndeces, success in
+                            if success{
+                                var a = documents
+                                a?.insert(document, at: 0)
+                                completion(a,true)
+                            }else{
+                                completion(nil,false)
+                            }
+                        }
+                    }
+                }else{
+                    if index == self.documents.value.count-1{
+                        completion(nil,false)
+                    }
+                }
+                
+            }))
+            self.rootViewController?.present(alert, animated: true)
+        }
+        
     }
     
     func getFilepath(outputFileName: String?, fileType: OutputFileType) -> URL{
