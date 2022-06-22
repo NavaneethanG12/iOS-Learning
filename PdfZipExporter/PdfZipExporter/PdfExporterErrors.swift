@@ -14,6 +14,8 @@ enum PdfExporterErrors: String, Error{
     case mergeError
     case zipError
     case urlError
+    case flatteningError
+    case passwordError
 }
 
 extension PdfExporterErrors : LocalizedError{
@@ -31,6 +33,10 @@ extension PdfExporterErrors : LocalizedError{
             return "Error while Zipping"
         case .urlError:
             return "Pdf Couldn't be made from the given urls or Error with urls"
+        case .flatteningError:
+            return "Pdf Exporter Error while flattening the pdf"
+        case .passwordError:
+            return "Password Mismatch"
         }
     }
 }

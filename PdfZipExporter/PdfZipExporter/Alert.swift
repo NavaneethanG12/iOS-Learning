@@ -12,19 +12,15 @@ enum Alert{
     case noData(String)
     case fileExists(String)
     case noAvailablePdfs(String)
+    case defaultAlert(String)
+    case passAlert(String)
 }
 
 
 class MyAlert: NSObject {
-    
-    static let shared: MyAlert = MyAlert()
-    
+        
     var sharedAlert: UIAlertController!
     
-    private override init() {
-        
-    }
-
     func showAlert(inView: UIViewController, alert: Alert){
         switch alert {
         case .noData(let message):
@@ -33,10 +29,15 @@ class MyAlert: NSObject {
             sharedAlert = UIAlertController(title: message, message: "", preferredStyle: .alert)
         case .noAvailablePdfs(let message):
             sharedAlert = UIAlertController(title: message, message: "", preferredStyle: .alert)
-//        default:
-//            sharedAlert = UIAlertController(title: "Something went wrong!", message: "", preferredStyle: .alert)
+        case .defaultAlert(let message):
+            sharedAlert = UIAlertController(title: message, message: "", preferredStyle: .alert)
+        case .passAlert(let message):
+            sharedAlert = UIAlertController(title: message, message: "", preferredStyle: .alert)
+            sharedAlert.addTextField { textField in
+                textField.placeholder = "Enter Password"
+            }
         }
-        sharedAlert.addAction(UIAlertAction(title: "OK", style: .default))
+        sharedAlert.addAction(UIAlertAction(title: "OK", style: .cancel))
         inView.present(sharedAlert, animated: true)
     }
     

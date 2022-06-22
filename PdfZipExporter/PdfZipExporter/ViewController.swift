@@ -14,8 +14,7 @@ import PDFKit
 
 class ViewController: UIViewController {
     
-    
-    var pdfExporter = PdfExporter()
+    lazy var pdfExporter = PdfExporter(rootVC: self)
     
     lazy var pdfCountLabel: UILabel = {
         let label = UILabel()
@@ -23,6 +22,8 @@ class ViewController: UIViewController {
     }()
     
     var mergedFilePath: URL!
+    
+    var myAlert = MyAlert()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +40,7 @@ class ViewController: UIViewController {
     }
 
     @objc func removeAllPdf(){
-        pdfExporter.documentUrls.value.removeAll()
+        pdfExporter.documents.value.removeAll()
 //        pdfCount.value = pdfDocuments.count
     }
     
@@ -75,7 +76,7 @@ class ViewController: UIViewController {
             make.center.equalToSuperview()
         }
         
-        let viewPdf = ZButton(title: "View Merged Pdf", titleColor: .white, bgColor: .tintColor, cornerRadius: 26, target: self, action: #selector(shorMergedpdf))
+        let viewPdf = ZButton(title: "View Merged Pdf", titleColor: .white, bgColor: .tintColor, cornerRadius: 26, target: self, action: #selector(showMergedpdf))
         
         view.addSubview(viewPdf)
         
@@ -108,7 +109,18 @@ class ViewController: UIViewController {
             make.bottom.equalTo(zipPdf.snp.top).offset(-15)
         }
         
-        pdfExporter.documentUrls.bind {[weak self] value in
+        let flatPdf = ZButton(title: "Flat Pdf", titleColor: .white, bgColor: .tintColor, cornerRadius: 26, target: self, action: #selector(flatAllPdfs))
+        
+        view.addSubview(flatPdf)
+        
+        flatPdf.snp.makeConstraints { make in
+            make.width.equalTo(175)
+            make.height.equalTo(52)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(mergePdf.snp.top).offset(-15)
+        }
+        
+        pdfExporter.documents.bind {[weak self] value in
 //            if value.count == 0{
 //                self?.navigationItem.rightBarButtonItem?.isEnabled = false
 //                viewPdf.isUserInteractionEnabled = false
@@ -124,14 +136,25 @@ class ViewController: UIViewController {
     }
     
     @objc func mergeAllPdfs(){
-        do{
-            let mergedPdfpath = try pdfExporter.mergeAvailablePdfs()
-            print("Merged File Path ---- \(mergedPdfpath)")
-            mergedFilePath = mergedPdfpath
-        }catch{
-            print(error.localizedDescription)
-        }
+
+            pdfExporter.mergeAvailablePdfs { url, error in
+                guard let mergedFilePath = url else { return }
+                print("Merged File Path ---- \(mergedFilePath)")
+                self.mergedFilePath = mergedFilePath
+            }
+     
   
+    }
+    
+    @objc func flatAllPdfs(){
+        
+        pdfExporter.flattenAvailablePdf { url, error in
+            guard let url = url else { return }
+            print("Flattened document path --------- \(url)")
+        }
+           
+        
+        
     }
     
     @objc func zipAllPdfs(){
@@ -148,20 +171,14 @@ class ViewController: UIViewController {
                 print("\(String(describing: self)) was destroyed")
                 return
             }
-            do{
-                let zippedPath = try _self.pdfExporter.zipAvailablePdfs(encryptionKey: encryptionKey == "" ? nil : encryptionKey)
-                
+
+            _self.pdfExporter.zipAvailablePdfs(encryptionKey: encryptionKey == "" ? nil : encryptionKey) { url, error in
+                guard let zippedPath = url else { return }
                 print("Zipped file path ---- \(zippedPath)")
-            }catch{
-                print(error.localizedDescription)
-                if let error = error as? PdfExporterErrors{
-                    if error == .fileAlreadyExists{
-                        MyAlert.shared.showAlert(inView: _self, alert: .fileExists("File Already Exists"))
-                    }else if error == .noAvailablePdfs{
-                        MyAlert.shared.showAlert(inView: _self, alert: .noAvailablePdfs("No available pdf to encrypt"))
-                    }
-                }
             }
+                
+               
+           
         }))
         present(alert, animated: true)
         
@@ -180,19 +197,11 @@ class ViewController: UIViewController {
                 print("\(String(describing: self)) was destroyed")
                 return
             }
-            do{
-                let encryptPath = try _self.pdfExporter.encryptAvailablePdfs(encryptionKey: encryptionKey == "" ? nil : encryptionKey )
+            _self.pdfExporter.encryptAvailablePdfs(encryptionKey: encryptionKey == "" ? nil : encryptionKey) { url, error in
+                guard let encryptPath = url else { return }
                 print("Encrypted file path ---- \(encryptPath)")
-            }catch{
-                print(error.localizedDescription)
-                if let error = error as? PdfExporterErrors{
-                    if error == .fileAlreadyExists{
-                        MyAlert.shared.showAlert(inView: _self, alert: .fileExists("File Already Exists"))
-                    }else if error == .noAvailablePdfs{
-                        MyAlert.shared.showAlert(inView: _self, alert: .noAvailablePdfs("No available pdf to encrypt"))
-                    }
-                }
             }
+                
         }))
         present(alert, animated: true)
     }
@@ -219,9 +228,10 @@ class ViewController: UIViewController {
         present(documentPicker, animated: true)
     }
     
-    @objc func shorMergedpdf(){
-            let pdfDocument = PDFDocument(url: mergedFilePath)
-            let pdfVC = PdfViewController(document: pdfDocument!)
+    @objc func showMergedpdf(){
+        guard let pdfDocument = PDFDocument(url: mergedFilePath) else { return }
+       
+            let pdfVC = PdfViewController(document: pdfDocument)
             
             self.navigationController?.pushViewController(pdfVC, animated: true)
     }
@@ -231,8 +241,11 @@ class ViewController: UIViewController {
 extension ViewController: UIDocumentPickerDelegate{
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        for url in urls {
+            let document = ZDocument(fileName: url.lastPathComponent, fileUrl: url, filePath: url.path)
+            pdfExporter.documents.value.append(document)
+        }
         
-        pdfExporter.documentUrls.value = urls
            
     }
     
