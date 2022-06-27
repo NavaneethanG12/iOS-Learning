@@ -24,7 +24,18 @@
 		C4AB532128609D080026FC5E /* PdfExporterErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB532028609D080026FC5E /* PdfExporterErrors.swift */; };
 		C4AB53232861B0330026FC5E /* ZDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB53222861B0330026FC5E /* ZDocument.swift */; };
 		C4AB53252861E0620026FC5E /* Notification.Name+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB53242861E0620026FC5E /* Notification.Name+.swift */; };
+		C4AB532D28642ED10026FC5E /* PdfZipExporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB532C28642ED10026FC5E /* PdfZipExporterTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C4AB532E28642ED10026FC5E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C45F6479285C99D400D32A37 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C45F6480285C99D400D32A37;
+			remoteInfo = PdfZipExporter;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		583BBAA96DF1555817729F02 /* Pods_PdfZipExporter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PdfZipExporter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +58,8 @@
 		C4AB532028609D080026FC5E /* PdfExporterErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExporterErrors.swift; sourceTree = "<group>"; };
 		C4AB53222861B0330026FC5E /* ZDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZDocument.swift; sourceTree = "<group>"; };
 		C4AB53242861E0620026FC5E /* Notification.Name+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+.swift"; sourceTree = "<group>"; };
+		C4AB532A28642ED10026FC5E /* PdfZipExporterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PdfZipExporterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4AB532C28642ED10026FC5E /* PdfZipExporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfZipExporterTests.swift; sourceTree = "<group>"; };
 		EF90B697371F378503D31B9E /* Pods-PdfZipExporter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PdfZipExporter.debug.xcconfig"; path = "Target Support Files/Pods-PdfZipExporter/Pods-PdfZipExporter.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -56,6 +69,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4765ABE376A19918F697E92D /* Pods_PdfZipExporter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4AB532728642ED10026FC5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				C45F6483285C99D400D32A37 /* PdfZipExporter */,
+				C4AB532B28642ED10026FC5E /* PdfZipExporterTests */,
 				C45F6482285C99D400D32A37 /* Products */,
 				338AA8D1E17026CD0664E805 /* Pods */,
 				6BA7FBA8BB2F298C55227B71 /* Frameworks */,
@@ -93,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				C45F6481285C99D400D32A37 /* PdfZipExporter.app */,
+				C4AB532A28642ED10026FC5E /* PdfZipExporterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,6 +143,14 @@
 			path = PdfZipExporter;
 			sourceTree = "<group>";
 		};
+		C4AB532B28642ED10026FC5E /* PdfZipExporterTests */ = {
+			isa = PBXGroup;
+			children = (
+				C4AB532C28642ED10026FC5E /* PdfZipExporterTests.swift */,
+			);
+			path = PdfZipExporterTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,6 +173,24 @@
 			productReference = C45F6481285C99D400D32A37 /* PdfZipExporter.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C4AB532928642ED10026FC5E /* PdfZipExporterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C4AB533028642ED10026FC5E /* Build configuration list for PBXNativeTarget "PdfZipExporterTests" */;
+			buildPhases = (
+				C4AB532628642ED10026FC5E /* Sources */,
+				C4AB532728642ED10026FC5E /* Frameworks */,
+				C4AB532828642ED10026FC5E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C4AB532F28642ED10026FC5E /* PBXTargetDependency */,
+			);
+			name = PdfZipExporterTests;
+			productName = PdfZipExporterTests;
+			productReference = C4AB532A28642ED10026FC5E /* PdfZipExporterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -155,6 +203,10 @@
 				TargetAttributes = {
 					C45F6480285C99D400D32A37 = {
 						CreatedOnToolsVersion = 13.4.1;
+					};
+					C4AB532928642ED10026FC5E = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = C45F6480285C99D400D32A37;
 					};
 				};
 			};
@@ -172,6 +224,7 @@
 			projectRoot = "";
 			targets = (
 				C45F6480285C99D400D32A37 /* PdfZipExporter */,
+				C4AB532928642ED10026FC5E /* PdfZipExporterTests */,
 			);
 		};
 /* End PBXProject section */
@@ -184,6 +237,13 @@
 				C45F6491285C99D600D32A37 /* LaunchScreen.storyboard in Resources */,
 				C45F648E285C99D600D32A37 /* Assets.xcassets in Resources */,
 				C45F648C285C99D400D32A37 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4AB532828642ED10026FC5E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +312,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C4AB532628642ED10026FC5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C4AB532D28642ED10026FC5E /* PdfZipExporterTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C4AB532F28642ED10026FC5E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C45F6480285C99D400D32A37 /* PdfZipExporter */;
+			targetProxy = C4AB532E28642ED10026FC5E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C45F648A285C99D400D32A37 /* Main.storyboard */ = {
@@ -444,6 +520,40 @@
 			};
 			name = Release;
 		};
+		C4AB533128642ED10026FC5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.navaneethan.g.PdfZipExporterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PdfZipExporter.app/PdfZipExporter";
+			};
+			name = Debug;
+		};
+		C4AB533228642ED10026FC5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.navaneethan.g.PdfZipExporterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PdfZipExporter.app/PdfZipExporter";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -461,6 +571,15 @@
 			buildConfigurations = (
 				C45F6496285C99D600D32A37 /* Debug */,
 				C45F6497285C99D600D32A37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C4AB533028642ED10026FC5E /* Build configuration list for PBXNativeTarget "PdfZipExporterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4AB533128642ED10026FC5E /* Debug */,
+				C4AB533228642ED10026FC5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

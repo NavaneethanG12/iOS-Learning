@@ -24,7 +24,11 @@ class MainViewController: UITabBarController {
         vc2.tabBarItem = UITabBarItem(title: "tabBar_Dog", image: UIImage(named: "tabBar_dog")?.resizeImage(targetSize: CGSize(width: 20, height: 20)) , selectedImage: UIImage(named: "tabBar_dog_selected")?.resizeImage(targetSize: CGSize(width: 25, height: 25)))
         let nav2 = UINavigationController(rootViewController: vc2)
         
-        viewControllers = [nav1,nav2]
+        let vc3 = DogViewController()
+        vc2.tabBarItem = UITabBarItem(title: "tabBar_Dog", image: UIImage(named: "tabBar_dog")?.resizeImage(targetSize: CGSize(width: 20, height: 20)) , selectedImage: UIImage(named: "tabBar_dog_selected")?.resizeImage(targetSize: CGSize(width: 25, height: 25)))
+        let nav3 = UINavigationController(rootViewController: vc3)
+        
+        viewControllers = [nav1,nav2,nav3]
         setIOS15TabBar()
     }
     
