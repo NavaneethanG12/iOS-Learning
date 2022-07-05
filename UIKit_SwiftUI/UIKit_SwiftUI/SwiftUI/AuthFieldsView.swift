@@ -51,7 +51,7 @@ struct AuthFieldsView: View{
             .onChange(of: moveToFirstField) { newValue in
                 if newValue {
                     otpModel.otpFields.removeAll()
-                    otpModel.otpFields = Array(repeating: "", count: 6)
+                    otpModel.otpFields = Array(repeating:" ", count: 6)
                     fieldInFocus = .field1
                 }
                 //                    else{
@@ -73,14 +73,20 @@ struct AuthFieldsView: View{
     
     func OtpConditon(value: [String]){
         for index in 0..<5{
-            if value[index].count == 1 && fieldInFocus == activeStateForIndex(index: index){
+            if value[index].count > 1 &&  fieldInFocus == activeStateForIndex(index: index){
                 fieldInFocus = activeStateForIndex(index: index + 1)
             }
         }
         
-        for index in 1..<6{
+        for index in 0..<6{
             if value[index].count == 0 && fieldInFocus == activeStateForIndex(index: index){
-                fieldInFocus = activeStateForIndex(index: index - 1)
+                if index == 0{
+                    otpModel.otpFields[index] = " "
+                }else{
+                    otpModel.otpFields[index] = " "
+                    fieldInFocus = activeStateForIndex(index: index - 1)
+                }
+                
             }
         }
         

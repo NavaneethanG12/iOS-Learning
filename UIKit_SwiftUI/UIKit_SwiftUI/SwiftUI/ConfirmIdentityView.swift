@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct ConfirmIdentityView: View {
     @ObservedObject var otpModel = OtpViewModel()
     @State var t: [String] = []
@@ -54,7 +52,7 @@ struct ConfirmIdentityView: View {
                 .padding(.top, 29)
                 .onChange(of: otpModel.otpFields) { newValue in
                     for index in 0...5{
-                        if newValue[index].count == 1{
+                        if newValue[index].count > 1{
                                 lockIcon = "lock_icon"
                                 bgColor = .bgGray
                                 showError = false
@@ -82,6 +80,7 @@ struct ConfirmIdentityView: View {
                 ZUIButton(bgColor: .white, strokeColor: .buttonColor, title: "Resend Code", titleColor: .black) {
                     masterOtp = generateRandomDigits(6)
                     print("Master OTP --- \(masterOtp)")
+                    
                 }
             }
             .padding(.init(top: 74, leading: 0, bottom: 0, trailing: 0))

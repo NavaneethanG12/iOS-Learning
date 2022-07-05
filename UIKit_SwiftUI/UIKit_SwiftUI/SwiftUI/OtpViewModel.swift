@@ -14,6 +14,6 @@ class OtpViewModel: ObservableObject, Equatable{
     }
     
     @Published var otpText: String = ""
-    @Published var otpFields: [String] = Array(repeating: "", count: 6)
+    @Published var otpFields: [String] = Array(repeating:" ", count: 6)
     
 }

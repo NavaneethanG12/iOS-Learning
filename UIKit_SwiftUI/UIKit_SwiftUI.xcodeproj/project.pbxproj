@@ -21,6 +21,7 @@
 		C4AB539D2865B8230026FC5E /* Int_to_Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB53972865B8230026FC5E /* Int_to_Array.swift */; };
 		C4AB539E2865B8230026FC5E /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB53982865B8230026FC5E /* Color+.swift */; };
 		C4AB53A02869BBD00026FC5E /* UITextFieldRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AB539F2869BBD00026FC5E /* UITextFieldRepresentable.swift */; };
+		C4D312B4286AC37B00F15E39 /* BottomToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D312B3286AC37B00F15E39 /* BottomToast.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		C4AB53972865B8230026FC5E /* Int_to_Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int_to_Array.swift; sourceTree = "<group>"; };
 		C4AB53982865B8230026FC5E /* Color+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
 		C4AB539F2869BBD00026FC5E /* UITextFieldRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldRepresentable.swift; sourceTree = "<group>"; };
+		C4D312B3286AC37B00F15E39 /* BottomToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToast.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 				C4AB53942865B8200026FC5E /* OtpViewModel.swift */,
 				C4AB53962865B8220026FC5E /* ZUIButton.swift */,
 				C4AB539F2869BBD00026FC5E /* UITextFieldRepresentable.swift */,
+				C4D312B3286AC37B00F15E39 /* BottomToast.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				C4AB539E2865B8230026FC5E /* Color+.swift in Sources */,
 				C4AB53812865B7AD0026FC5E /* ViewController.swift in Sources */,
 				C4AB537D2865B7AD0026FC5E /* AppDelegate.swift in Sources */,
+				C4D312B4286AC37B00F15E39 /* BottomToast.swift in Sources */,
 				C4AB539D2865B8230026FC5E /* Int_to_Array.swift in Sources */,
 				C4AB53922865B7E70026FC5E /* ConfirmIdentityView.swift in Sources */,
 				C4AB53992865B8230026FC5E /* LockIcon.swift in Sources */,
